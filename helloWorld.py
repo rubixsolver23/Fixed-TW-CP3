@@ -1,4 +1,1 @@
-print("hello world")
-print("goodbye")
-print("test3")
-print("final")
+print("This will be a completely new project now!!!")
