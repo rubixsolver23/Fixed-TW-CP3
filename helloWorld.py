@@ -16,4 +16,4 @@ while True:
     print("It took you %s seconds bro"% total)
     if total > 4:
         break
-print("You lose LLLLLL")
+print("You lose LLLLLLL")
