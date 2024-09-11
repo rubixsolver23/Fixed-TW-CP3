@@ -1,7 +1,7 @@
 import time
 import random
 
-print("Type one of the following or die in the lavaAAA")
+print("Type the following or die in the lavaAAA")
 
 time.sleep(5)
 while True:
