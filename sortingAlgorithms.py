@@ -65,7 +65,7 @@ def inputArr():
         print("Invalid.")
         return inputArr()
 
-def partition(data): # This is part of quicksort
+def partition(data, show_steps): # This is part of quicksort
     global steps
     global swaps
     idx_pointer = -1
@@ -80,28 +80,44 @@ def partition(data): # This is part of quicksort
                 data[pvt_pointer], data[idx_pointer] = data[idx_pointer], data[pvt_pointer]
                 swaps += 1
                 steps += 1
+                if show_steps:
+                    print("Two values swapped!")
+                    print(data)
         else:
             pass
     return [data[0:pvt_pointer], data[pvt_pointer], data[pvt_pointer+1:]]
 
-def quicksort(data):
+def quicksort(data, show_steps):
     
-    total = partition(data)
+    total = partition(data, show_steps)
     
+    if show_steps:
+            print("Quicksorting left")
+            
     if len(total[0]) > 1:
-        left = quicksort(total[0])
+        left = quicksort(total[0], show_steps)
     else:
         left = total[0]
+
+    if show_steps:
+        print(left)
     
+    
+    if show_steps:
+        print("Quicksorting right")
+        
     if len(total[2]) > 1:
-        right = quicksort(total[2])
+        right = quicksort(total[2], show_steps)
     else:
         right = total[2]
+        
+    if show_steps:
+        print(right)
     
     
     return left+[total[1]]+right
 
-def bubblesort(data):
+def bubblesort(data, show_steps):
     global steps
     global swaps
     for h in range(len(data)-1):
@@ -111,9 +127,11 @@ def bubblesort(data):
                 data[i], data[i+1] = data[i+1], data[i]
                 steps += 1
                 swaps += 1
+                if show_steps:
+                    print(data)
     return data
 
-def selectionsort(data):
+def selectionsort(data, show_steps):
     global steps
     global swaps
     for i in range(len(data)):
@@ -123,9 +141,11 @@ def selectionsort(data):
                 data[i], data[j] = data[j], data[i]
                 steps += 1
                 swaps += 1
+                if show_steps:
+                    print(data)
     return data
 
-def pigeonholesort(data):
+def pigeonholesort(data, show_steps):
     global steps
     min = data[0]
     max = data[0]
@@ -137,23 +157,28 @@ def pigeonholesort(data):
             max = i
     size = max - min + 1
     pigeonholes = [0] * size
+    print("Max:", max, "Min:", min)
     
     # Use a for loop through the list and put each item in a pigeonhole
     for i in data:
         steps += 1
         pigeonholes[i-min] += 1
-    
+        
+    if show_steps:
+        print("Pigeonholes:", pigeonholes)
     
     # Create a new list with the sorted data
     ans = []
     for i in range(len(pigeonholes)):
         steps += 1
         ans += [i + min] * pigeonholes[i]
-            
+        
+        if show_steps:
+            print(ans)
     return ans
     
 
-def cocktailsort(data):
+def cocktailsort(data, show_steps):
     global steps
     global swaps
     for i in range(len(data)//2):
@@ -163,12 +188,16 @@ def cocktailsort(data):
                 data[i], data[i+1] = data[i+1], data[i]
                 steps += 1
                 swaps += 1
+                if show_steps:
+                    print(data)
         for k in range(len(data)-1, i, -1):
             steps += 1
             if data[k] < data[k-1]:
                 data[k], data[k-1] = data[k-1], data[k]
                 steps += 1
                 swaps += 1
+                if show_steps:
+                    print(data)
     return data
 
 def main():
@@ -181,35 +210,41 @@ def main():
     if input("Do you want to print the shuffled list? (y/n): ") == "y":
         print(data_set)
     
+    if input("Do you want to show the steps of the algorithm as it runs? (y/n): ") == "y":
+        show_steps = True
+    else:
+        show_steps = False
+        
     valid = False
     
     while not valid:
     
         sorting_type = input("Would you like to use:\nQuicksort (q),\nBubblesort (b),\nSelection sort (s),\nCocktail sort (c),\nor pigeonhole sort (p)?: ")
+        
         if sorting_type == "q":
             valid = True
             t1 = time.time()
-            data_set = quicksort(data_set)
+            data_set = quicksort(data_set, show_steps)
             timer = time.time() - t1
         elif sorting_type == "b":
             valid = True
             t1 = time.time()
-            data_set = bubblesort(data_set)
+            data_set = bubblesort(data_set, show_steps)
             timer = time.time() - t1
         elif sorting_type == "s":
             valid = True
             t1 = time.time()
-            data_set = selectionsort(data_set)
+            data_set = selectionsort(data_set, show_steps)
             timer = time.time() - t1
         elif sorting_type == "p":
             valid = True
             t1 = time.time()
-            data_set = pigeonholesort(data_set)
+            data_set = pigeonholesort(data_set, show_steps)
             timer = time.time() - t1
         elif sorting_type == "c":
             valid = True
             t1 = time.time()
-            data_set = cocktailsort(data_set)
+            data_set = cocktailsort(data_set, show_steps)
             timer = time.time() - t1
         else:
             print("Invalid option.")
@@ -223,7 +258,7 @@ def main():
         print("The number of steps is incremented by 1 every time it checks values, \ndoes a loop iteration, or swaps two values in a list.")
         print("Number of swaps:", swaps)
         print("Number of steps:", steps)
-    output_data_confirm = input("Would you like to print the new data set? (y/n):")
+    output_data_confirm = input("Would you like to print the sorted data set? (y/n): ")
     if output_data_confirm == "y":
         print(data_set)
         
