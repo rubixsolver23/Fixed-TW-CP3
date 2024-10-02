@@ -29,31 +29,29 @@ class Fowl:
         self.gravity = gravity
         self.boinginess = boinginess
         self.jumpButtons = []
+        self.score = 0
         self.spawn = (175, 275)
-        self.velocity = [0, 0]
+        self.velocity = 0
+        self.dead = False
     
     def fall(self):
-        self.velocity[1] -= self.gravity
+        self.velocity -= self.gravity
 
     def update_pos(self):
-        self.hitbox.centerx += self.velocity[0]
-        self.hitbox.centery -= self.velocity[1]
+        self.hitbox.centery -= self.velocity
 
     def boing(self):
-        self.velocity[1] = self.boinginess
+        self.velocity = self.boinginess
     
     def check_death(self, pipes):
         self.collisions = self.hitbox.collidelist(pipes)
         if self.collisions != -1:
-            self.die()
+            return True
         
         if self.hitbox.top < 0 or self.hitbox.bottom > 600:
-            self.die()
-    
-    def die(self):
-        pygame.quit()
-        sys.exit()
+            return True
 
+        
 class PipeGenerator:
     def __init__(self, pipe_distance, x_pos, thickness, gap, length, speed, sprite):
         self.pipe_distance = pipe_distance
@@ -77,6 +75,7 @@ class Pipe:
         self.pipe_distance_to_center = gap/2
         self.speed = speed
         self.sprite = sprite
+        self.scored = False
         self.top_pipe_hitbox = pygame.Rect(x_pos, -self.length+y_pos-self.pipe_distance_to_center, self.thickness, self.length)
         self.bottom_pipe_hitbox = pygame.Rect(x_pos, y_pos+self.pipe_distance_to_center, self.thickness, self.length)
     
@@ -92,6 +91,33 @@ def main():
 
     pipe_generator = PipeGenerator(pipe_distance, 650, pipe_thickness, pipe_gap, pipe_length, pipe_speed, None)
     pipes = []
+    while True:
+        
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+                if event.key in player.jumpButtons:
+                    player.boing()
+                    break
+
+
+        
+        windowSurface.fill(SKY)
+        pygame.draw.rect(windowSurface, YELLOW, player.hitbox)
+
+
+        # ALWAYS AT THE END
+
+        pygame.display.update()
+        mainClock.tick(60)
+        if player.velocity != 0:
+            break
+        
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -114,6 +140,11 @@ def main():
             pipe.move()
             if pipe.top_pipe_hitbox.centerx < -(pipe_thickness/2):
                 pipes.remove(pipe)
+            elif pipe.top_pipe_hitbox.centerx < player.hitbox.centerx and not pipe.scored:
+                pipe.scored = True
+                player.score += 1
+                print(player.score)
+
 
 
         pipe_hitboxes = []
@@ -123,7 +154,8 @@ def main():
         # Player updates
         player.fall()
         player.update_pos()
-        player.check_death(pipe_hitboxes)
+        if player.check_death(pipe_hitboxes):
+            break
 
         
         windowSurface.fill(SKY)
@@ -142,5 +174,29 @@ def main():
         mainClock.tick(60)
 
 
-time.sleep(1)
-main()
+    # Player death
+
+    player.velocity = 6
+    while player.hitbox.top < 600:
+        player.fall()
+        player.update_pos()
+        windowSurface.fill(SKY)
+        pygame.draw.rect(windowSurface, YELLOW, player.hitbox)
+
+        for pipe in pipes:
+            pygame.draw.rect(windowSurface, GREEN, pipe.top_pipe_hitbox)
+            pygame.draw.rect(windowSurface, GREEN, pipe.bottom_pipe_hitbox)
+
+
+
+        # ALWAYS AT THE END
+
+        pygame.display.update()
+        mainClock.tick(60)
+
+
+
+
+while True:
+    main()
+    time.sleep(0.5)
