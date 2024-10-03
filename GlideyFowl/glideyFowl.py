@@ -9,11 +9,13 @@ WINDOWHEIGHT = 600
 windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT), 0, 32)
 pygame.display.set_caption("Glidey Fowl")
 
-score_font = pygame.font.Font("/workspaces/Fixed-TW-CP3/GlideyFowl/numeric_font.ttf", 100)
+score_font = pygame.font.Font("GlideyFowl\\numeric_font.ttf", 100)
 
 GREEN = (0, 255, 0)
 YELLOW = (255, 255, 0)
-SKY = (0, 150, 200)
+SKY = (0, 150, 255)
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
 
 windowSurface.fill(SKY)
 
@@ -159,7 +161,7 @@ def main():
         if player.check_death(pipe_hitboxes):
             break
 
-        score_text = score_font.render(str(player.score), False, None, None)
+        score_text = score_font.render(str(player.score), False, BLACK, WHITE)
         score_rect = score_text.get_rect()
         score_rect.centerx = 300
         score_rect.centery = 50
