@@ -17,6 +17,10 @@ WHITE = (255, 255, 255)
 
 windowSurface.fill(SKY)
 
+numeric_font = {
+    0: open("0.png")
+}
+
 bird_size = 50
 pipe_thickness = 70
 pipe_gap = 176
