@@ -1,4 +1,4 @@
-import pygame, sys, math, random, time
+import pygame, sys, math, random, time, os
 from pygame.locals import *
 
 mainClock = pygame.time.Clock()
@@ -18,7 +18,16 @@ WHITE = (255, 255, 255)
 windowSurface.fill(SKY)
 
 numeric_font = {
-    0: open("0.png")
+    0: pygame.image.load(os.path.join("GlideyFowl/numeric_font/0.png")),
+    1: pygame.image.load(os.path.join("GlideyFowl/numeric_font/1.png")),
+    2: pygame.image.load(os.path.join("GlideyFowl/numeric_font/2.png")),
+    3: pygame.image.load(os.path.join("GlideyFowl/numeric_font/3.png")),
+    4: pygame.image.load(os.path.join("GlideyFowl/numeric_font/4.png")),
+    5: pygame.image.load(os.path.join("GlideyFowl/numeric_font/5.png")),
+    6: pygame.image.load(os.path.join("GlideyFowl/numeric_font/6.png")),
+    7: pygame.image.load(os.path.join("GlideyFowl/numeric_font/7.png")),
+    8: pygame.image.load(os.path.join("GlideyFowl/numeric_font/8.png")),
+    9: pygame.image.load(os.path.join("GlideyFowl/numeric_font/9.png"))
 }
 
 bird_size = 50
