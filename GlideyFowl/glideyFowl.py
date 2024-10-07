@@ -172,9 +172,13 @@ def main():
         if player.check_death(pipe_hitboxes):
             break
 
+       
+
 
         windowSurface.fill(SKY)
         pygame.draw.rect(windowSurface, YELLOW, player.hitbox)
+
+        windowSurface.blit(numeric_font[player.score], (295, 10))
 
         for pipe in pipes:
             pygame.draw.rect(windowSurface, GREEN, pipe.top_pipe_hitbox)
