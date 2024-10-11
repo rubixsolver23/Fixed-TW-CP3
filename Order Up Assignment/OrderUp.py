@@ -1,7 +1,8 @@
 import sys
 
 def sanitize(string):
-    return string.strip().lower()
+    string_list = string.split()
+    return " ".join(string_list)
 
 class Order:
     menu = None
