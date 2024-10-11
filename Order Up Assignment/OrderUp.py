@@ -2,6 +2,8 @@ import sys
 
 def sanitize(string):
     string_list = string.split()
+    for idx, word in enumerate(string_list):
+        string_list[idx] = word.lower().capitalize()
     return " ".join(string_list)
 
 class Order:
@@ -18,7 +20,7 @@ class Order:
         order = None
         while order not in menu["Drink"]:
             order = sanitize(input("What would you like to drink?: "))
-            if order == "nothing":
+            if order == "Nothing":
                 break
             if order not in menu["Drink"]:
                 print("This is not on the menu.")
@@ -28,7 +30,7 @@ class Order:
         order = None
         while order not in menu["Appetizer"]:
             order = sanitize(input("What would you like for an appetizer?: "))
-            if order == "nothing":
+            if order == "Nothing":
                 break
             if order not in menu["Appetizer"]:
                 print("This is not on the menu.")
@@ -38,7 +40,7 @@ class Order:
         order = None
         while order not in menu["Main Course"]:
             order = sanitize(input("What would you like for your main course?: "))
-            if order == "nothing":
+            if order == "Nothing":
                 break
             if order not in menu["Main Course"]:
                 print("This is not on the menu.")
@@ -48,19 +50,19 @@ class Order:
         order = None
         while order not in menu["Sides"]:
             order = sanitize(input("What would you like for a side?: "))
-            if order == "nothing":
+            if order == "Nothing":
                 break
             if order not in menu["Sides"]:
                 print("This is not on the menu.")
-        if order == "nothing":
-            return ["nothing", "nothing"]
+        if order == "Nothing":
+            return ["Nothing", "Nothing"]
         else:
             order = [order]
             order2 = None
             while order2 not in menu["Sides"]:
                 order2 = sanitize(input("What would you like for another side?: "))
-                if order2 == "nothing":
-                    order.append("nothing")
+                if order2 == "Nothing":
+                    order.append("Nothing")
                     return order
                 if order2 not in menu["Sides"]:
                     print("This is not on the menu.")
@@ -70,41 +72,41 @@ class Order:
     def get_dessert(self):
         order = None
         while order not in menu["Dessert"]:
-            order = input("What would you like for your dessert?: ")
-            if order == "nothing":
+            order = sanitize(input("What would you like for your dessert?: "))
+            if order == "Nothing":
                 break
             if order not in menu["Dessert"]:
                 print("This is not on the menu.")
         return order
 
     def __str__(self):
-        return f"You have ordered: {self.drink}, {self.appetizer}, {self.main_course}, {self.sides[0]}, {self.sides[1]} and {self.dessert}"
+        return f"You have ordered: {self.drink} to drink, {self.appetizer} for your appetizer, {self.main_course} for your main course, {self.sides[0]} for one side, {self.sides[1]} for your second side and {self.dessert} for dessert."
     
     def calculate_price(self):
-        if self.drink == "nothing":
+        if self.drink == "Nothing":
             d_price = 0.00
         else:
             d_price = menu["Drink"][self.drink]
 
-        if self.appetizer == "nothing":
+        if self.appetizer == "Nothing":
             a_price = 0.00
         else:
             a_price = menu["Appetizer"][self.appetizer]
 
-        if self.main_course == "nothing":
+        if self.main_course == "Nothing":
             m_price = 0.00
         else:
             m_price = menu["Main Course"][self.main_course]
         
-        if self.sides[0] == "nothing":
+        if self.sides[0] == "Nothing":
             s_price = 0.00
         else:
-            if self.sides[1] == "nothing":
+            if self.sides[1] == "Nothing":
                 s_price = menu["Sides"][self.sides[0]]
             else:
                 s_price = menu["Sides"][self.sides[0]] + menu["Sides"][self.sides[1]]
         
-        if self.dessert == "nothing":
+        if self.dessert == "Nothing":
             de_price = 0.00
         else:
             de_price = menu["Dessert"][self.dessert]
@@ -122,7 +124,7 @@ class Order:
 
     @staticmethod
     def check_if_blank(object):
-        if object.drink == "nothing" and object.appetizer == "nothing" and object.main_course == "nothing" and object.sides == ["nothing", "nothing"] and object.dessert == "nothing":
+        if object.drink == "Nothing" and object.appetizer == "Nothing" and object.main_course == "Nothing" and object.sides == ["Nothing", "Nothing"] and object.dessert == "Nothing":
             return True
 
 
@@ -182,11 +184,11 @@ if Order.check_if_blank(my_meal):
 
 print(my_meal)
 print("Total:", my_meal.calculate_price())
-change_part = input("Would you like to change some part of your order? (y/n): ")
-while change_part == "y":
+change_part = sanitize(input("Would you like to change some part of your order? (y/n): "))
+while change_part == "Y":
     part_to_change = None
     while part_to_change not in Order.menu.keys():
-        part_to_change = input("What part would you like to change? (Drink, Appetizer, Main Course, Sides, Dessert): ")
+        part_to_change = sanitize(input("What part would you like to change? (Drink, Appetizer, Main Course, Sides, Dessert): "))
         if part_to_change not in Order.menu.keys():
             print("This is not a valid option.")
         else:
@@ -203,4 +205,6 @@ while change_part == "y":
 
     print(my_meal)
     print("Total:", my_meal.calculate_price())
-    change_part = input("Would you like to change some part of your order? (y/n): ")
+    change_part = sanitize(input("Would you like to change some part of your order? (y/n): "))
+
+print(f"Your total is {my_meal.calculate_price()}. Enjoy your meal!")
