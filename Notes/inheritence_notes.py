@@ -8,7 +8,7 @@ class PetStore:
         self.featured_pet = None
 
     def add_pet(self, animal):
-        assert isinstance(animal, Animal)
+        assert isinstance(animal, Animal)  # assert error if assert statement is false, isinstances checks if the first argument is an instance of the second argument class
         self.animals.append(animal)
 
     def remove_pet(self, animal):
