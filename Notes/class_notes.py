@@ -9,6 +9,8 @@ class Animal:
         self.gender = gender
         self.rarity = rarity
     
+    def get_name(self):
+        return self.name
     # Methods are funcitons inside of a class
     # This one takes in another animal and returns the one with a longer name
     def fight(self, other):
