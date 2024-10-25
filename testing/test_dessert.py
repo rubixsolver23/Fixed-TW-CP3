@@ -1,4 +1,4 @@
-from DessertShop.dessert import (
+from DessertShop.dessertshop import (
     DessertItem,
     Candy,
     Cookie,
