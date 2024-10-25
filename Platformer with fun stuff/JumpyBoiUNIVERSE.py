@@ -21,7 +21,20 @@ Particle
 SoundManager
 '''
 class LevelManager:
-    pass
+    def __init__(self):
+        pass
+
+    def create_empty_level(self, id, dimensions):
+        level_list = []
+        for i in range(dimensions[0]):
+            level_list.append("B")
+        for j in range(dimensions[1]-2):
+            level_list.append(" ")
+        for k in range(dimensions[0]):
+            level_list.append("B")
+
+
+        return Level()
 
 class Level:
     def __init__(self, id, level_dict, block_size):
@@ -34,12 +47,13 @@ class Level:
 
     def create_block_objects(self):
         width = self.level_dict["width"]
-        height = self.level_dict["height"]
         for idx, block in enumerate(self.level_dict["blocklist"]):
             if block == "B":
                 block_color = (0,0,0)
                 block_hitbox = pygame.Rect(0, 0, self.block_size, self.block_size)
                 self.block_object_list.append(RegBlock(idx%width, idx//width, block_color, block_hitbox, self.block_size))
+
+
 
 class LevelEditor:
     pass
@@ -93,7 +107,7 @@ def main():
     }, 30)
     while True:
         # FIRST
-        '''
+        
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
@@ -102,7 +116,7 @@ def main():
                 if event.key == K_ESCAPE:
                     pygame.quit()
                     sys.exit()
-        '''
+        
         # then other stuff
 
         windowSurface.fill((255,255,255))
