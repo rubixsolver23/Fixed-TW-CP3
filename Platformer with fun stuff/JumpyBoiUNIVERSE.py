@@ -26,15 +26,18 @@ class LevelManager:
 
     def create_empty_level(self, id, dimensions):
         level_list = []
-        for i in range(dimensions[0]):
-            level_list.append("B")
-        for j in range(dimensions[1]-2):
-            level_list.append(" ")
-        for k in range(dimensions[0]):
-            level_list.append("B")
+        level_list += ["B"] * dimensions[0] # top of box
+        level_list += ((["B"] + [" "] * (dimensions[0]-2) + ["B"]) * (dimensions[1]-2)) # walls and middle of box
+        level_list += ["B"] * dimensions[0] # bottom of box
+        
 
 
-        return Level()
+
+        return Level(id, {
+            "width": dimensions[0],
+            "height": dimensions[1],
+            "blocklist": level_list
+        }, 20)
 
 class Level:
     def __init__(self, id, level_dict, block_size):
@@ -49,14 +52,14 @@ class Level:
         width = self.level_dict["width"]
         for idx, block in enumerate(self.level_dict["blocklist"]):
             if block == "B":
-                block_color = (0,0,0)
                 block_hitbox = pygame.Rect(0, 0, self.block_size, self.block_size)
-                self.block_object_list.append(RegBlock(idx%width, idx//width, block_color, block_hitbox, self.block_size))
+                self.block_object_list.append(RegBlock(idx%width, idx//width, block_hitbox, self.block_size))
 
 
 
 class LevelEditor:
-    pass
+    def __init__(self):
+        self.camera = Camera({"up": K_w, "down": K_s, "left": K_a, "right": K_d}, 5)
 
 
 class Block:
@@ -67,17 +70,19 @@ class Block:
         self.hitbox = hitbox
         self.blocksize = blocksize
 
-    def render(self, camera_pos):
+    def pos_block(self, camera_pos):
         self.hitbox.centerx = self.x*self.blocksize - camera_pos[0]
         self.hitbox.centery = self.y*self.blocksize - camera_pos[1]
+
+    def render(self):
         pygame.draw.rect(windowSurface, self.color, self.hitbox)
 
 class PlayerBlock(Block):
     pass
 
 class RegBlock(Block):
-    def __init__(self, x, y, color, hitbox, blocksize):
-        super().__init__(x, y, color, hitbox, blocksize)
+    def __init__(self, x, y, hitbox, blocksize):
+        super().__init__(x, y, (0,0,0), hitbox, blocksize)
 
 class LaserBlock(Block):
     pass
@@ -92,19 +97,25 @@ class ExitBlock(Block):
     pass
 
 class Camera():
-    pass
+    def __init__(self, move_buttons, speed):
+        self.pos = [0, 0]
+        self.move_buttons = move_buttons
+        self.speed = speed
+
+
+    def move_camera(self, movement):
+        self.pos[0] += movement[0]
+        self.pos[1] += movement[1]
 
 def main():
+    LEVELMANAGER = LevelManager()
 
-    level1 = Level(1, {
-        "width": 3,
-        "height": 3,
-        "blocklist": [
-            "B", " ", "B",
-            " ", "B", " ",
-            "B", " ", "B"
-        ]
-    }, 30)
+    level1 = LEVELMANAGER.create_empty_level(0, [30, 30])
+
+    level_editor = LevelEditor()
+
+    # cursor_box = pygame.Rect(0, 0, 20, 20)
+
     while True:
         # FIRST
         
@@ -119,9 +130,34 @@ def main():
         
         # then other stuff
 
+        # Get keys pressed and mouse position
+        keys = pygame.key.get_pressed()
+        raw_mouse_pos = pygame.mouse.get_pos()
+        
+        # Get camera movements
+        if keys[level_editor.camera.move_buttons["up"]]:
+            level_editor.camera.move_camera([0, -level_editor.camera.speed])
+        if keys[level_editor.camera.move_buttons["down"]]:
+            level_editor.camera.move_camera([0, level_editor.camera.speed])
+        if keys[level_editor.camera.move_buttons["left"]]:
+            level_editor.camera.move_camera([-level_editor.camera.speed, 0])
+        if keys[level_editor.camera.move_buttons["right"]]:
+            level_editor.camera.move_camera([level_editor.camera.speed, 0])
+
+        mouse_pos = [raw_mouse_pos[0]-level_editor.camera.pos[0], raw_mouse_pos[1]-level_editor.camera.pos[1]]
+
+
+
+        # Set positions of rectangles
+        for block in level1.block_object_list:
+            block.pos_block(level_editor.camera.pos)
+
+        # Draw rectangles
         windowSurface.fill((255,255,255))
         for block in level1.block_object_list:
-            block.render([0, 0])
+            block.render()
+
+
 
         # LAST
         pygame.display.update()
