@@ -71,8 +71,8 @@ class Block:
         self.blocksize = blocksize
 
     def pos_block(self, camera_pos):
-        self.hitbox.centerx = self.x*self.blocksize - camera_pos[0]
-        self.hitbox.centery = self.y*self.blocksize - camera_pos[1]
+        self.hitbox.left = self.x*self.blocksize - camera_pos[0]
+        self.hitbox.top = self.y*self.blocksize - camera_pos[1]
 
     def render(self):
         pygame.draw.rect(windowSurface, self.color, self.hitbox)
@@ -110,7 +110,7 @@ class Camera():
 def main():
     LEVELMANAGER = LevelManager()
 
-    level1 = LEVELMANAGER.create_empty_level(0, [30, 30])
+    level1 = LEVELMANAGER.create_empty_level(0, [50, 40])
 
     level_editor = LevelEditor()
 
