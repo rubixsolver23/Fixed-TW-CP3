@@ -61,6 +61,10 @@ class LevelEditor:
     def __init__(self):
         self.camera = Camera({"up": K_w, "down": K_s, "left": K_a, "right": K_d}, 5)
 
+    def add_block(self, tile_num, level):
+        level.level_list["blocklist"][tile_num] = "B"
+        return level
+
 
 class Block:
     def __init__(self, x, y, color, hitbox, blocksize):
@@ -110,11 +114,12 @@ class Camera():
 def main():
     LEVELMANAGER = LevelManager()
 
-    level1 = LEVELMANAGER.create_empty_level(0, [50, 40])
+    level1 = LEVELMANAGER.create_empty_level(0, [40, 50])
 
     level_editor = LevelEditor()
+    blocksize = 20
 
-    # cursor_box = pygame.Rect(0, 0, 20, 20)
+    cursor_box = pygame.Rect(0, 0, 20, 20)
 
     while True:
         # FIRST
@@ -144,13 +149,24 @@ def main():
         if keys[level_editor.camera.move_buttons["right"]]:
             level_editor.camera.move_camera([level_editor.camera.speed, 0])
 
-        mouse_pos = [raw_mouse_pos[0]-level_editor.camera.pos[0], raw_mouse_pos[1]-level_editor.camera.pos[1]]
+        mouse_pos = [raw_mouse_pos[0]+level_editor.camera.pos[0], raw_mouse_pos[1]+level_editor.camera.pos[1]]
+        tile_num = mouse_pos[0] // blocksize + (mouse_pos[1] // blocksize) * level1.level_dict["width"]
 
+        print(mouse_pos)
+
+        cursor_box.left = tile_num % level1.level_dict["width"] * blocksize
+        cursor_box.top = tile_num // level1.level_dict["width"] * blocksize
+        cursor_box.left -= level_editor.camera.pos[0]
+        cursor_box.top -= level_editor.camera.pos[1]
+
+        if pygame.mouse.get_pressed()[0]:
+            pass
 
 
         # Set positions of rectangles
         for block in level1.block_object_list:
             block.pos_block(level_editor.camera.pos)
+
 
         # Draw rectangles
         windowSurface.fill((255,255,255))
@@ -158,7 +174,7 @@ def main():
             block.render()
 
 
-
+        pygame.draw.rect(windowSurface, (0, 0, 0), cursor_box)
         # LAST
         pygame.display.update()
         mainClock.tick(60)
