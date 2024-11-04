@@ -148,6 +148,9 @@ if battle1:
         bracket.pop[1]
     else:
         bracket.pop[0]
+    battle2 = battle(bracket[1], bracket[2])
 else:
     bracket.pop[0]
     bracket.pop[1]
+    battle2 = battle(bracket[0], bracket[1])
+
