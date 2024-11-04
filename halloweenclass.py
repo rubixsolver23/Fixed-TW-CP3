@@ -18,7 +18,7 @@ class Monster:
 
 class Bush(Monster):
     def __init__(self, name, where_from):
-        super().__init__(name, where_from, 10)
+        super().__init__(name, where_from, 5)
         self.defense = 5
         self.offense = 2
 
@@ -31,7 +31,7 @@ class Bush(Monster):
                 print(self.name, "overshot the dash!")
                 return False
             else:
-                print(self.name, "knocked over", other.name)
+                print(self.name, "knocked over", other.name + "!")
                 other.health -= 1
                 return True
         else:
@@ -39,7 +39,7 @@ class Bush(Monster):
         
 class Sand(Monster):
     def __init__(self, name, where_from):
-        super().__init__(name, where_from, 12)
+        super().__init__(name, where_from, 4)
         self.defense = 2
         self.offense = -1
 
@@ -64,7 +64,7 @@ class Sand(Monster):
 
 class Trash(Monster):
     def __init__(self, name, where_from):
-        super().__init__(name, where_from, 10)
+        super().__init__(name, where_from, 5)
         self.defense = 4
         self.offense = 2
 
@@ -100,7 +100,7 @@ class Box(Monster):
         time.sleep(3)
         if issubclass(other.__class__, Monster):
             if other.get_defense() > self.get_offense():
-                print("Nothing happened!")
+                print("Nothing happened!!!")
                 return False
             else:
                 print(self.name, "spontaniously exploded!!!")
@@ -142,17 +142,21 @@ box = Box("dn ʎɐʍ sᴉɥ┴", "Amazon")
 bracket = [bush, sand, trash, box]
 random.shuffle(bracket)
 
+input("Press enter when you are ready for the battle to begin!")
+
 battle1 = battle(bracket[0], bracket[1])
 if battle1:
     if battle1 == 1:
         bracket.pop(1)
     else:
         bracket.pop(0)
+    time.sleep(1)
     battle2 = battle(bracket[1], bracket[2])
     print(f"{bracket[0].name} is the overall winner!")
 else:
     bracket.pop(0)
     bracket.pop(1)
+    time.sleep(1)
     battle2 = battle(bracket[0], bracket[1])
     print(f"{bracket[battle2-1].name} is the overall winner!")
 
