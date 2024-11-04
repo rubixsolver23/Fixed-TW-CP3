@@ -145,12 +145,14 @@ random.shuffle(bracket)
 battle1 = battle(bracket[0], bracket[1])
 if battle1:
     if battle1 == 1:
-        bracket.pop[1]
+        bracket.pop(1)
     else:
-        bracket.pop[0]
+        bracket.pop(0)
     battle2 = battle(bracket[1], bracket[2])
+    print(f"{bracket[0].name} is the overall winner!")
 else:
-    bracket.pop[0]
-    bracket.pop[1]
+    bracket.pop(0)
+    bracket.pop(1)
     battle2 = battle(bracket[0], bracket[1])
+    print(f"{bracket[battle2-1].name} is the overall winner!")
 
