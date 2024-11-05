@@ -152,8 +152,6 @@ def main():
         mouse_pos = [raw_mouse_pos[0]+level_editor.camera.pos[0], raw_mouse_pos[1]+level_editor.camera.pos[1]]
         tile_num = mouse_pos[0] // blocksize + (mouse_pos[1] // blocksize) * level1.level_dict["width"]
 
-        print(mouse_pos)
-
         cursor_box.left = tile_num % level1.level_dict["width"] * blocksize
         cursor_box.top = tile_num // level1.level_dict["width"] * blocksize
         cursor_box.left -= level_editor.camera.pos[0]
