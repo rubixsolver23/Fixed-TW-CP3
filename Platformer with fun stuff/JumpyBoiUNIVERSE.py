@@ -54,7 +54,9 @@ class Level:
             if block == "B":
                 block_hitbox = pygame.Rect(0, 0, self.block_size, self.block_size)
                 self.block_object_list.append(RegBlock(idx%width, idx//width, block_hitbox, self.block_size))
-
+    
+    def get_str_of_blocks(self):
+        return "".join(self.level_dict["blocklist"])
 
 
 class LevelEditor:
@@ -123,6 +125,7 @@ def main():
 
     cursor_box = pygame.Rect(0, 0, 20, 20)
 
+
     while True:
         # FIRST
         
@@ -134,6 +137,10 @@ def main():
                 if event.key == K_ESCAPE:
                     pygame.quit()
                     sys.exit()
+                elif event.key == K_t:
+                    level_file = open("Platformer with fun stuff/levels.txt", "w")
+                    level_file.write(level1.get_str_of_blocks())
+                    level_file.close()
         
         # then other stuff
 
@@ -162,12 +169,12 @@ def main():
         if pygame.mouse.get_pressed()[0]:
             if level1.level_dict["blocklist"][level_editor.tile_num] != "B":
                 level_editor.add_block(level1)
+                
 
 
         # Set positions of rectangles
         for block in level1.block_object_list:
             block.pos_block(level_editor.camera.pos)
-
 
         # Draw rectangles
         windowSurface.fill((255,255,255))
@@ -179,6 +186,7 @@ def main():
         # LAST
         pygame.display.update()
         mainClock.tick(60)
+    
         
 
 main()
