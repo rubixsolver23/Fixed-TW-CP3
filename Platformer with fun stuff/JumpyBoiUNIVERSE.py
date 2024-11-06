@@ -60,9 +60,11 @@ class Level:
 class LevelEditor:
     def __init__(self):
         self.camera = Camera({"up": K_w, "down": K_s, "left": K_a, "right": K_d}, 5)
+        self.tile_num = 0
 
-    def add_block(self, tile_num, level):
-        level.level_list["blocklist"][tile_num] = "B"
+    def add_block(self, level):
+        level.level_dict["blocklist"][self.tile_num] = "B"
+        level.create_block_objects()
         return level
 
 
@@ -150,15 +152,16 @@ def main():
             level_editor.camera.move_camera([level_editor.camera.speed, 0])
 
         mouse_pos = [raw_mouse_pos[0]+level_editor.camera.pos[0], raw_mouse_pos[1]+level_editor.camera.pos[1]]
-        tile_num = mouse_pos[0] // blocksize + (mouse_pos[1] // blocksize) * level1.level_dict["width"]
+        level_editor.tile_num = mouse_pos[0] // blocksize + (mouse_pos[1] // blocksize) * level1.level_dict["width"]
 
-        cursor_box.left = tile_num % level1.level_dict["width"] * blocksize
-        cursor_box.top = tile_num // level1.level_dict["width"] * blocksize
+        cursor_box.left = level_editor.tile_num % level1.level_dict["width"] * blocksize
+        cursor_box.top = level_editor.tile_num // level1.level_dict["width"] * blocksize
         cursor_box.left -= level_editor.camera.pos[0]
         cursor_box.top -= level_editor.camera.pos[1]
 
         if pygame.mouse.get_pressed()[0]:
-            pass
+            if level1.level_dict["blocklist"][level_editor.tile_num] != "B":
+                level_editor.add_block(level1)
 
 
         # Set positions of rectangles
